@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - tic0
+  - tic1
+  - tic2
+  - tic3
+  - tic4
+  - tic5
+  - tic6
+  - tic7
+  - tic8
+  - tic9
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: New Layer 1
+    uniqueID: 3728778279
+    locked: 0
+  - name: New Layer 2
+    uniqueID: 2266547027
+    locked: 0
+  - name: New Layer 3
+    uniqueID: 4229574169
+    locked: 0
+  - name: New Layer 4
+    uniqueID: 4182880725
+    locked: 0
+  m_RenderingLayers:
+  - Default
+  m_MigratedRenderPipelines: []
