@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5502428223054966857}
   - component: {fileID: 2443265396582816410}
+  - component: {fileID: 6877807030697838797}
   m_Layer: 0
   m_Name: ContractSegment
   m_TagString: Untagged
@@ -17,14 +18,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5502428223054966857
-Transform:
+--- !u!224 &5502428223054966857
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2727545333170586259}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -34,6 +34,11 @@ Transform:
   - {fileID: 1987548997723215349}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!61 &2443265396582816410
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -80,6 +85,24 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5, y: 6}
   m_EdgeRadius: 0
+--- !u!114 &6877807030697838797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2727545333170586259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2165be9f259270b43b4e2d98938f8688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ContractDraggerPasser
+  positionInSequance: 0
+  contract: {fileID: 0}
+  body: {fileID: 0}
+  snapReference: {fileID: 0}
+  releaseSearchRadius: 0.15
+  dropedOnThisSegment: 0
 --- !u!1 &5750178828067424421
 GameObject:
   m_ObjectHideFlags: 0
@@ -171,7 +194,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.1
+        value: 0.8
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -212,7 +235,7 @@ LineRenderer:
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
-    numCapVertices: 0
+    numCapVertices: 5
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -235,7 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ContractVis
   contract: {fileID: 0}
   myLineRenderer: {fileID: 0}
-  frequency: 1
+  draggerPasser: {fileID: 6877807030697838797}
   length: 5
 --- !u!1 &6844385480303147212
 GameObject:

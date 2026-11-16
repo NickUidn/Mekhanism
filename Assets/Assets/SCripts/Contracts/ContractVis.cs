@@ -7,8 +7,7 @@ public class ContractVis : MonoBehaviour
 {
     public ContractClass contract;
     public LineRenderer myLineRenderer;
-  
-
+    public ContractSegment draggerPasser;
     // Track old values to see if something actually changed
     private float lastAmplitude;
     private float lastFrequency;
@@ -26,11 +25,36 @@ public class ContractVis : MonoBehaviour
         set
         {
             float clampedValue = Mathf.Clamp(value, Amp_MIN_VALUE, Amp_MAX_VALUE);
+
             if (contract != null && contract.isOdd)
-                _amplitude = -Mathf.Abs(clampedValue);
-            else
-                _amplitude = Mathf.Abs(clampedValue);
-        }
+            {
+                if (draggerPasser.positionInSequance % 2 != 0)
+                {
+                   
+                    _amplitude = -Mathf.Abs(clampedValue);
+                }
+                else
+                {
+                  
+                    _amplitude = Mathf.Abs(clampedValue);
+                }
+
+            }
+            else if (contract != null && contract.isOdd==false)
+            {
+                if (draggerPasser.positionInSequance % 2 != 0)
+                {
+                  
+                    _amplitude = Mathf.Abs(clampedValue);
+                }
+                else
+                {
+                   
+                    _amplitude = -Mathf.Abs(clampedValue);
+                }
+            }
+
+            }
     }
     private float _frequency;
     public float frequency
@@ -53,9 +77,9 @@ public class ContractVis : MonoBehaviour
     void Start()
     {
         //contract=gameObject.GetComponentInParent<ContractClass>();
-        // Draw it once at the beginning
-        DrawStaticWave();
-        SaveCurrentValues();
+        //// Draw it once at the beginning
+        //DrawStaticWave();
+        //SaveCurrentValues();
     }
 
     private void Update()
@@ -69,6 +93,7 @@ public class ContractVis : MonoBehaviour
     }
     public void SetAmplitude(int amplitudeValue)
     {
+      
         float mapped = MapAmplitude(amplitudeValue);       
             amplitude = mapped;
             return;
@@ -104,7 +129,7 @@ public class ContractVis : MonoBehaviour
         lastLength = length;
     }
 
-    void DrawStaticWave()
+   public void DrawStaticWave()
     {
         float xStart = 0;
         float xFinish = length;

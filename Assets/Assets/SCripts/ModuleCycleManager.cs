@@ -26,7 +26,7 @@ public class ModuleCycleManager : MonoBehaviour
     private void Start()
     {
         ResourceManager.scrap = 100;
-        Debug.Log(ResourceManager.scrap);
+      
         isCycleRunning = false; 
         // Find all ModuleClassCycle components in the scene
         ModuleClassCycle[] foundModules = FindObjectsOfType<ModuleClassCycle>();
