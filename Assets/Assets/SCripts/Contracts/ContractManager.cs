@@ -63,9 +63,9 @@ public class ContractManager : MonoBehaviour
             spotRT.rect.center.y,
             0f
         );
-
+        float halfWidth = instanceRT.rect.width * 0.5f * instanceRT.lossyScale.x;
         // Convert to world, then assign (works across differing parent scales)
-        instanceRT.position = spotRT.TransformPoint(leftEdgeCenterLocal);
+        instanceRT.position = spotRT.TransformPoint(leftEdgeCenterLocal + new Vector3(halfWidth, 0f, 0f));
 
         spawnedContracts[slotIndex] = instance;
     }
