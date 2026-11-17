@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ContractClass : MonoBehaviour
@@ -48,8 +46,8 @@ public class ContractClass : MonoBehaviour
 
     [SerializeField] public List<ContractDataForTic> contractBody = new List<ContractDataForTic>();
 
-    // NEW: runtime list of spawned segment components, in spawn order
-   public List<ContractSegment> segments = new List<ContractSegment>();
+    // Runtime list of spawned segment components, in spawn order
+    public List<ContractSegment> segments = new List<ContractSegment>();
 
     [SerializeField] GameObject segmentPrefab;
     public int reward;
@@ -66,6 +64,10 @@ public class ContractClass : MonoBehaviour
 
     public bool isContractActive;
 
+    // Set by ContractManager when it spawns this contract
+    [HideInInspector] public ContractManager manager;
+    [HideInInspector] public int spotNumber;   // 1-3
+
     private void Start()
     {
         currentIndex = 0;
@@ -73,23 +75,24 @@ public class ContractClass : MonoBehaviour
         cycleManager = FindAnyObjectByType<ModuleCycleManager>();
         cycleManager.AfterSuccessfulCycleActions += CheckContract;
 
-        AddContractSegment(0, 5, 20, 50);
-        AddContractSegment(1, 5, 40, 30);
-        AddContractSegment(3, 5, 10, 20);
-        BuildContractBody();
+        // Segments are now supplied by ContractManager.SpawnContract()
+        // (AddContractSegment x N, then BuildContractBody()).
     }
 
     private void OnDisable()
     {
-        cycleManager.AfterSuccessfulCycleActions -= CheckContract;
+        if (cycleManager != null)
+            cycleManager.AfterSuccessfulCycleActions -= CheckContract;
     }
 
-  
-
-    public void AddContractSegment(int targetTicIndex, int margins, int contractAmp, int contractFreq)
+    /// <summary>
+    /// Adds a segment. The target tic index is NOT set here (-1 = unassigned);
+    /// it gets assigned when the player drops the contract onto the cycle.
+    /// </summary>
+    public void AddContractSegment(int margins, int contractAmp, int contractFreq)
     {
         contractLength++;
-        contractBody.Add(new ContractDataForTic(targetTicIndex, margins, contractAmp, contractFreq));
+        contractBody.Add(new ContractDataForTic(-1, margins, contractAmp, contractFreq));
     }
 
     public void SnapedToPosition()
@@ -148,12 +151,12 @@ public class ContractClass : MonoBehaviour
             }
             vis.DrawStaticWave();
 
-            // NEW: track the spawned segment for later use
+            // Track the spawned segment for later use
             segments.Add(contractSegment);
         }
     }
 
-    // NEW: iterate over the built segments
+    // Iterate over the built segments
     public void ProcessSegments()
     {
         foreach (ContractSegment seg in segments)
@@ -163,7 +166,7 @@ public class ContractClass : MonoBehaviour
         }
     }
 
-    // NEW: destroy and clear built segments
+    // Destroy and clear built segments
     public void ClearSegments()
     {
         foreach (ContractSegment seg in segments)
@@ -174,6 +177,34 @@ public class ContractClass : MonoBehaviour
             }
         }
         segments.Clear();
+    }
+
+    /// <summary>
+    /// Deletes this contract: unsubscribes from events, clears all of its lists,
+    /// frees its spot in ContractManager and destroys the spawned contract object.
+    /// </summary>
+    public void DestroyContract()
+    {
+        if (cycleManager != null)
+            cycleManager.AfterSuccessfulCycleActions -= CheckContract;
+
+        isContractActive = false;
+
+        ClearSegments();        // destroys segment objects + clears segments list
+        contractBody.Clear();
+        contractLength = 0;
+        currentIndex = 0;
+
+        if (manager != null)
+        {
+            // Destroys the spawned contract object and nulls the spot slot
+            manager.ClearSpot(spotNumber);
+        }
+        else
+        {
+            // No manager (e.g. contract placed manually in scene): destroy the root body
+            Destroy(transform.parent != null ? transform.parent.gameObject : gameObject);
+        }
     }
 
     public void CheckContract()

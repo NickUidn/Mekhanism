@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-using UnityEditor;
 using UnityEngine;
 
 public class ContractManager : MonoBehaviour
@@ -11,20 +9,23 @@ public class ContractManager : MonoBehaviour
     private GameObject[] spawnedContracts = new GameObject[3];
     public ContractClass contract;
 
-    private void Awake()
-    {
-        //if (contractPrefab != null)
-        //{
-        //    contract=Instantiate(contractPrefab,gameObject.transform).GetComponent<ContractClass>();
-        //    contract.AddContractSegment(2, 10, 50, 25);
-        //}
-    }
-  RectTransform scaleCheckRef;
+    [Header("Random Contract Ranges (min inclusive, max inclusive)")]
+    [SerializeField] int minSegments = 1;
+    [SerializeField] int maxSegments = 5;
+    [SerializeField] int minMargins = 5;
+    [SerializeField] int maxMargins = 40;
+    [SerializeField] int minAmp = 0;
+    [SerializeField] int maxAmp = 100;
+    [SerializeField] int minFreq = 0;
+    [SerializeField] int maxFreq = 100;
+
+    RectTransform scaleCheckRef;
+
     private void Start()
     {
-        scaleCheckRef= GameObject.Find("Cycle").GetComponent<RectTransform>();
+        scaleCheckRef = GameObject.Find("Cycle").GetComponent<RectTransform>();
     }
-  
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.K))
@@ -32,6 +33,7 @@ public class ContractManager : MonoBehaviour
             SpawnContract();
         }
     }
+
     private void SpawnContract()
     {
         // Find the first free spot
@@ -45,7 +47,7 @@ public class ContractManager : MonoBehaviour
             }
         }
 
-        // All spots taken — ignore the command
+        // All spots taken - ignore the command
         if (slotIndex == -1)
             return;
 
@@ -68,8 +70,32 @@ public class ContractManager : MonoBehaviour
         instanceRT.position = spotRT.TransformPoint(leftEdgeCenterLocal + new Vector3(halfWidth, 0f, 0f));
 
         spawnedContracts[slotIndex] = instance;
+
+        // ---------- Randomised contract data ----------
+        ContractClass contractClass = instance.GetComponentInChildren<ContractClass>();
+        if (contractClass == null)
+        {
+            Debug.LogError("SpawnContract: no ContractClass found on the contract prefab.", instance);
+            return;
+        }
+
+        // Owner references so the contract can delete itself and free its spot
+        contractClass.manager = this;
+        contractClass.spotNumber = slotIndex + 1;
+
+        // Random.Range(int, int) excludes the max, so +1 on every upper bound
+        int segmentCount = Random.Range(minSegments, maxSegments + 1);
+        for (int i = 0; i < segmentCount; i++)
+        {
+            int margins = Random.Range(minMargins, maxMargins + 1);
+            int amp = Random.Range(minAmp, maxAmp + 1);
+            int freq = Random.Range(minFreq, maxFreq + 1);
+            contractClass.AddContractSegment(margins, amp, freq);
+        }
+
+        contractClass.BuildContractBody();
     }
-        
+
     public void ClearSpot(int spotNumber)
     {
         int index = spotNumber - 1;

@@ -11004,6 +11004,14 @@ MonoBehaviour:
   contractSpot2: {fileID: 537670469}
   contractSpot3: {fileID: 2072997265}
   contract: {fileID: 0}
+  minSegments: 1
+  maxSegments: 5
+  minMargins: 5
+  maxMargins: 40
+  minAmp: 0
+  maxAmp: 100
+  minFreq: 0
+  maxFreq: 100
 --- !u!1 &1433407207
 GameObject:
   m_ObjectHideFlags: 0
